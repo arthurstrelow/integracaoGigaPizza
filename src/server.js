@@ -9,6 +9,12 @@ server.use(express.json())
 server.use(cors())
 
 server.use('/', rotas)
+server.use((req, res, next) => {
+    res.status(404).json({
+        status_code: 404,
+        msg: 'rota inexistente'
+    })
+})
 
 server.listen(porta, () => {
     console.log(`Status: \u001b[0;32mServidor Iniciado\u001b[0m | Porta: \u001b[0;34m${porta}\u001b[0m`)

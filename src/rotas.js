@@ -1,12 +1,11 @@
 import express from 'express'
-import axios from 'axios'
 import {Router} from 'express'
-
+import {API} from './funcoes.js'
 const rotas = Router()
 
 rotas.get('/', async (req, res) => {
     res.status(200).json({
-        status: 200,
+        status_code: 200,
         msg: 'Página Inicial!'
     })
 })
