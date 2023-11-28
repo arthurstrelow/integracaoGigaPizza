@@ -1,12 +1,13 @@
 import axios from 'axios'
 
-export async function API(metodo, endpoint){
+export async function API(metodo, endpoint, data = false){
     return new Promise(async (resolve, reject) => {
         try{
             const api = await axios({
                 method: metodo,
                 url: 'https://gigapizza.onrender.com/api/maingigapizza/' + endpoint,
-                headers: {"Content-Type": "application/json"}
+                headers: {"Content-Type": "application/json"},
+                data: data
             })
             resolve({
                 status_code: api.status,
