@@ -19,8 +19,8 @@ export async function API(metodo, endpoint){
             reject({
                 status_code: e.response.status,
                 statusText: e.response.statusText,
-                method: e.response.config.method,
-                url: e.response.config.url,
+                method: e.config.method,
+                url: e.config.url,
                 data: e.response.data
             })
         }
