@@ -1,6 +1,5 @@
 import express from 'express'
 import * as subcategoriaControlador from '../controladores/subcategorias.js'
-import {editarSubcategoria} from "../controladores/subcategorias.js";
 const rotas = express.Router()
 
 rotas

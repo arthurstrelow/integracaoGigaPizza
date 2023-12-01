@@ -22,16 +22,18 @@ export async function obterCategoria(req, res){
     }).catch((e) => {
         res.status(e.status_code).json({
             status_code: e.status_code,
-            msg: e.statusText
+            msg: e.statusText === "Internal Server Error" ? "Categoria não encontrada" : e.statusText
         })
     })
 }
 
 export async function ativarCategoria(req, res){
     const {id_categoria} = req.body
+    const verificao = (await API('get', `listar_categoria/${id_categoria}`)).data.is_active
+    if(verificao) return res.status(200).json({status_code: 200, msg: "Categoria já está ativada"})
     await API(req.method, `ativar_categoria/`, {
         "id_categoria": id_categoria
-    }).then((result) => {
+    }).then(async (result) => {
         res.status(result.status_code).json({
             status_code: result.status_code,
             msg: result.data.resultado === 'ok' ? "Categoria ativada" : result.data
@@ -46,6 +48,8 @@ export async function ativarCategoria(req, res){
 
 export async function inativarCategoria(req, res){
     const {id_categoria} = req.body
+    const verificao = (await API('get', `listar_categoria/${id_categoria}`)).data.is_active
+    if(!verificao) return res.status(200).json({status_code: 200, msg: "Categoria já está inativada"})
     await API(req.method, `inativar_categoria/`, {
         "id_categoria": id_categoria
     }).then((result) => {
@@ -69,8 +73,8 @@ export async function cadastrarCategoria(req, res){
     }).then((result) => {
             const resultado = result.data.resultado;
 
-            res.status(200).json({
-                status_code: 200,
+            res.status(result.status_code).json({
+                status_code: result.status_code,
                 msg: resultado !== undefined && resultado !== 0
                     ? `Categoria cadastrada com sucesso. ID: ${resultado}`
                     : 'Nome já cadastrado.'
@@ -92,8 +96,8 @@ export async function editarCategoria(req, res){
         "nome_categoria": nome_categoria
         }).then((result) => {
             const resultado = result.data.resultado;
-            res.status(200).json({
-                status_code: 200,
+            res.status(result.status_code).json({
+                status_code: result.status_code,
                 msg: resultado !== undefined && resultado !== 0 ? `Categoria editada` : 'Categoria já cadastrada.'
             });
         }).catch((error) => {
