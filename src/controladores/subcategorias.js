@@ -30,8 +30,10 @@ export async function obterSubcategoria(req, res){
 
 export async function ativarSubcategoria(req, res){
     const {id_subcategoria} = req.body
-    const verificao = (await API('get', `listar_subcategoria/${id_subcategoria}`)).data.is_active
-    if(verificao) return res.status(200).json({status_code: 200, msg: "Subcategoria já está ativada"})
+    try{
+        const verificao = (await API('get', `listar_subcategoria/${id_subcategoria}`)).data.is_active
+        if(verificao) return res.status(200).json({status_code: 200, msg: "Subcategoria já está ativada"})
+    }catch (e){}
     await API(req.method, `ativar_subcategoria/`, {
         "id_subcategoria": id_subcategoria
     }).then((result) => {
@@ -49,8 +51,10 @@ export async function ativarSubcategoria(req, res){
 
 export async function inativarSubcategoria(req, res){
     const {id_subcategoria} = req.body
-    const verificao = (await API('get', `listar_subcategoria/${id_subcategoria}`)).data.is_active
-    if(!verificao) return res.status(200).json({status_code: 200, msg: "Subcategoria já está inativada"})
+    try{
+        const verificao = (await API('get', `listar_subcategoria/${id_subcategoria}`)).data.is_active
+        if(!verificao) return res.status(200).json({status_code: 200, msg: "Subcategoria já está inativada"})
+    }catch(e){}
     await API(req.method, `inativar_subcategoria/`, {
         "id_subcategoria": id_subcategoria
     }).then((result) => {
