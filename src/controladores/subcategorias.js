@@ -15,7 +15,9 @@ export async function obterSubcategorias(req, res){
 }
 
 export async function obterSubcategoria(req, res){
-    await API(req.method, `listar_subcategoria/${req.params.id}`).then((result) => {
+    const id_subcategoria = req.params.id
+    if(isNaN(parseInt(id_subcategoria))) return res.status(404).json({status_code: 404, msg: 'campo "id_subcategoria" é necessário enviar um INTEGER'})
+    await API(req.method, `listar_subcategoria/${id_subcategoria}`).then((result) => {
         res.status(result.status_code).json({
             status_code: result.status_code,
             msg: result.data

@@ -1,4 +1,5 @@
 import {API} from '../funcoes.js'
+import {parse} from "nodemon/lib/cli/index.js";
 export async function obterCategorias(req, res){
     await API(req.method, 'listar_categorias/').then((result) => {
         res.status(result.status_code).json({
@@ -14,7 +15,9 @@ export async function obterCategorias(req, res){
 }
 
 export async function obterCategoria(req, res){
-    await API(req.method, `listar_categoria/${req.params.id}`).then((result) => {
+    const id_categoria = req.params.id
+    if(isNaN(parseInt(id_categoria))) return res.status(404).json({status_code: 404, msg: 'campo "id_categoria" é necessário enviar um INTEGER'})
+    await API(req.method, `listar_categoria/${id_categoria}`).then((result) => {
         res.status(result.status_code).json({
             status_code: result.status_code,
             msg: result.data
