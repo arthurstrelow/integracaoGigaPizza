@@ -1,4 +1,5 @@
 import express from 'express'
+import cors from 'cors'
 import categoriaRotas from "./rotas/categoriasRotas.js"
 import subcategoriasRotas from "./rotas/subcategoriasRotas.js"
 import error from "./rotas/error.js"
@@ -7,6 +8,7 @@ import paginaPrincipalRotas from "./rotas/paginaPrincipal.js"
 const server = express()
 const porta = 3000
 
+server.use(cors())
 server.use(express.json())
 server.use(paginaPrincipalRotas)
 server.use(categoriaRotas)
