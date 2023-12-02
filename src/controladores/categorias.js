@@ -4,7 +4,7 @@ export async function obterCategorias(req, res){
     await API(req.method, 'listar_categorias/').then((result) => {
         res.status(result.status_code).json({
             status_code: result.status_code,
-            msg: result.data
+            msg: result.data.sort((a,b) => a.id_categoria - b.id_categoria)
         })
     }).catch((e) => {
         res.status(e.status_code).json({
@@ -76,15 +76,14 @@ export async function cadastrarCategoria(req, res){
     const { nome_categoria } = req.body;
 
     await API(req.method, 'cadastrar_categoria/', {
-        "nome_categoria": nome_categoria
+        "nome_categoria": nome_categoria.trim()
     }).then((result) => {
             const resultado = result.data.resultado;
-
-            res.status(result.status_code).json({
-                status_code: result.status_code,
-                msg: resultado !== undefined && resultado !== 0
-                    ? `Categoria cadastrada com sucesso. ID: ${resultado}`
-                    : 'Nome já cadastrado.'
+            const verificaoDeNaoExistencia = resultado !== 0 // True: Não Existe; False: Existe
+            res.status(verificaoDeNaoExistencia ? 200 : 400).json({
+                status_code: verificaoDeNaoExistencia ? 200 : 400,
+                msg: verificaoDeNaoExistencia ? `Categoria cadastrada com sucesso.` : 'Existe uma categoria com esse nome.',
+                ...(verificaoDeNaoExistencia && {id_categoria: resultado})
             });
         })
         .catch((error) => {
@@ -100,12 +99,13 @@ export async function editarCategoria(req, res){
 
     await API(req.method, 'editar_categoria/', {
         "id_categoria": id_categoria,
-        "nome_categoria": nome_categoria
+        "nome_categoria": nome_categoria.trim()
         }).then((result) => {
             const resultado = result.data.resultado;
-            res.status(result.status_code).json({
-                status_code: result.status_code,
-                msg: resultado !== undefined && resultado !== 0 ? `Categoria editada` : 'Categoria já cadastrada.'
+            const verificaoDeNaoExistencia = resultado !== 0 // True: Não Existe; False: Existe
+            res.status(verificaoDeNaoExistencia ? 200 : 400).json({
+                status_code: verificaoDeNaoExistencia ? 200 : 400,
+                msg: verificaoDeNaoExistencia ? `Categoria editada com sucesso` : 'Nome da categoria já existe'
             });
         }).catch((error) => {
             res.status(error.status_code).json({

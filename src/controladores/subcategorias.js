@@ -4,7 +4,10 @@ export async function obterSubcategorias(req, res){
     await API(req.method, 'listar_subcategorias/').then((result) => {
         res.status(result.status_code).json({
             status_code: result.status_code,
-            msg: result.data
+            msg: result.data.sort((a,b) => {
+                if(a.id_categoria !== b.id_categoria) return a.id_categoria - b.id_categoria
+                return a.id_subcategoria - b.id_subcategoria
+            })
         })
     }).catch((e) => {
         res.status(e.status_code).json({
@@ -77,16 +80,15 @@ export async function cadastrarSubcategoria(req, res){
 
     await API(req.method, 'cadastrar_subcategoria/', {
         "id_categoria": id_categoria,
-        "nome_subcategoria": nome_subcategoria
+        "nome_subcategoria": nome_subcategoria.trim()
     })
         .then((result) => {
             const resultado = result.data.resultado;
-
-            res.status(result.status_code).json({
-                status_code: result.status_code,
-                msg: resultado !== undefined && resultado !== 0
-                    ? `Subcategoria cadastrada com sucesso. ID: ${resultado}`
-                    : 'Nome já cadastrado.'
+            const verificaoDeNaoExistencia = resultado !== 0 // True: Não Existe; False: Existe
+            res.status(verificaoDeNaoExistencia ? 200 : 400).json({
+                status_code: verificaoDeNaoExistencia ? 200 : 400,
+                msg: verificaoDeNaoExistencia ? `Subcategoria cadastrada com sucesso.` : 'Nome de subcategoria já existente',
+                ...(verificaoDeNaoExistencia && {id_subcategoria: resultado})
             });
         })
         .catch((error) => {
@@ -106,9 +108,10 @@ export async function editarSubcategoria(req, res){
         "nome_subcategoria": nome_subcategoria
     }).then((result) => {
             const resultado = result.data.resultado;
-            res.status(result.status_code).json({
-                status_code: result.status_code,
-                msg: resultado !== undefined && resultado !== 0 ? `Subcategoria editada` : 'Subcategoria já cadastrada.'
+            const verificaoDeNaoExistencia = resultado !== 0 // True: Não Existe; False: Existe
+            res.status(verificaoDeNaoExistencia ? 200 : 400).json({
+                status_code: verificaoDeNaoExistencia ? 200 : 400,
+                msg: verificaoDeNaoExistencia ? `Subcategoria editada` : 'Já existe uma Subcategoria com esse nome'
             })
         }).catch((error) => {
             res.status(error.status_code).json({
