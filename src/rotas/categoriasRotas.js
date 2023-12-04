@@ -1,5 +1,5 @@
 import express from 'express'
-import * as categoriaControlador from '../controladores/categorias.js'
+import * as categoriaControlador from '../controladores/categoriasControlador.js'
 const rotas = express.Router()
 
 rotas
