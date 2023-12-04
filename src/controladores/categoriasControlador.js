@@ -1,5 +1,4 @@
 import {API} from '../funcoes.js'
-import {parse} from "nodemon/lib/cli/index.js";
 export async function obterCategorias(req, res){
     await API(req.method, 'listar_categorias/').then((result) => {
         res.status(result.status_code).json({
