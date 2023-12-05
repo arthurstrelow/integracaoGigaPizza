@@ -3,7 +3,7 @@ import fs from "fs";
 import path, {dirname} from "path";
 import {fileURLToPath} from 'url'
 
-export async function API(metodo, endpoint, data = false){
+export async function API(metodo, endpoint, data = undefined){
     return new Promise(async (resolve, reject) => {
         try{
             const api = await axios({

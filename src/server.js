@@ -1,5 +1,6 @@
 import express from 'express'
 import cors from 'cors'
+import itemCompradoRotas from "./rotas/itemCompradoRotas.js"
 import categoriaRotas from "./rotas/categoriasRotas.js"
 import subcategoriasRotas from "./rotas/subcategoriasRotas.js"
 import error from "./rotas/error.js"
@@ -13,6 +14,7 @@ server.use(express.json())
 server.use(paginaPrincipalRotas)
 server.use(categoriaRotas)
 server.use(subcategoriasRotas)
+server.use(itemCompradoRotas)
 server.use(error)
 
 server.listen(porta, () => {
