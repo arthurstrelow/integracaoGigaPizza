@@ -20,6 +20,10 @@ rotas
 
 rotas
     .route('/cadastrar/itemcomprado')
-    .post(itemCompradoControlador.criaritemcomprado)
+    .post(itemCompradoControlador.criarItemComprado)
+
+rotas
+    .route('/editar/itemcomprado')
+    .post(itemCompradoControlador.editarItemComprado)
 
 export default rotas

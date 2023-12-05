@@ -116,9 +116,15 @@ export async function editarSubcategoria(req, res){
     }).then((result) => {
             const resultado = result.data.resultado;
             const verificaoDeNaoExistencia = resultado !== 0 // True: Não Existe; False: Existe
-            res.status(verificaoDeNaoExistencia ? 200 : 400).json({
+
+            const retorno = {
                 status_code: verificaoDeNaoExistencia ? 200 : 400,
                 msg: verificaoDeNaoExistencia ? `Subcategoria editada` : 'Já existe uma Subcategoria com esse nome'
+            }
+
+            res.status(retorno.status_code).json({
+                status_code: retorno.status_code,
+                msg: retorno.msg
             })
         }).catch((error) => {
             res.status(error.status_code).json({

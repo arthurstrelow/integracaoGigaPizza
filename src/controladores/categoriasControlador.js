@@ -87,7 +87,7 @@ export async function cadastrarCategoria(req, res){
                 msg: verificaoDeNaoExistencia ? `Categoria cadastrada com sucesso.` : 'Existe uma categoria com esse nome.'
             }
 
-            res.status(retorno.status_code ? 200 : 400).json({
+            res.status(retorno.status_code).json({
                 status_code: retorno.status_code,
                 msg: retorno.msg,
                 ...(verificaoDeNaoExistencia && {id_categoria: resultado})
@@ -109,9 +109,15 @@ export async function editarCategoria(req, res){
         }).then((result) => {
             const resultado = result.data.resultado;
             const verificaoDeNaoExistencia = resultado !== 0 // True: Não Existe; False: Existe
-            res.status(verificaoDeNaoExistencia ? 200 : 400).json({
+
+            const retorno = {
                 status_code: verificaoDeNaoExistencia ? 200 : 400,
                 msg: verificaoDeNaoExistencia ? `Categoria editada com sucesso` : 'Nome da categoria já existe'
+            }
+
+            res.status(retorno.status_code).json({
+                status_code: retorno.status_code,
+                msg: retorno.msg
             });
         }).catch((error) => {
             res.status(error.status_code).json({
