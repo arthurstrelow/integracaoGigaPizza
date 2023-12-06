@@ -1,5 +1,6 @@
 import express from 'express'
 import cors from 'cors'
+import itemVendaRotas from "./rotas/itemVendaRotas.js";
 import itemCompradoRotas from "./rotas/itemCompradoRotas.js"
 import categoriaRotas from "./rotas/categoriasRotas.js"
 import subcategoriasRotas from "./rotas/subcategoriasRotas.js"
@@ -15,6 +16,7 @@ server.use(paginaPrincipalRotas)
 server.use(categoriaRotas)
 server.use(subcategoriasRotas)
 server.use(itemCompradoRotas)
+server.use(itemVendaRotas)
 server.use(error)
 
 server.listen(porta, () => {
