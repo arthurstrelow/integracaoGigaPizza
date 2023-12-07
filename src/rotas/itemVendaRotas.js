@@ -7,7 +7,23 @@ rotas
     .get(itemVenda.obterItensVendas)
 
 rotas
-    .route('/listar/itemvenda/:id')
+    .route('/listar/itemvendido/:id')
     .get(itemVenda.obterItemVenda)
+
+rotas
+    .route('/ativar/venda')
+    .post(itemVenda.ativarItemVenda)
+
+rotas
+    .route('/inativar/venda')
+    .post(itemVenda.inativarItemVenda)
+
+rotas
+    .route('/cadastrar/itemvenda')
+    .post(itemVenda.criarItemVenda)
+
+rotas
+    .route('/editar/itemvenda')
+    .post(itemVenda.editarItemVenda)
 
 export default rotas
