@@ -19,7 +19,7 @@ export async function obterSubcategorias(req, res){
 
 export async function obterSubcategoria(req, res){
     const id_subcategoria = req.params.id
-    if(isNaN(parseInt(id_subcategoria))) return res.status(404).json({status_code: 404, msg: 'Por favor, insira apenas números no campo "id_subcategoria"'})
+    if(isNaN(parseInt(id_subcategoria))) return res.status(404).json({status_code: 404, msg: 'Tipo de dado não permitido'})
     await API(req.method, `listar_subcategoria/${id_subcategoria}`).then((result) => {
         res.status(result.status_code).json({
             status_code: result.status_code,
