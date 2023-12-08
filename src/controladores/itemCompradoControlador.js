@@ -4,7 +4,10 @@ export async function obterItensComprados(req, res){
     await API(req.method, 'listar_itens_comprados/').then((result) => {
         res.status(result.status_code).json({
             status_code: result.status_code,
-            msg: result.data.sort((a, b) => a.id_item_comprado - b.id_item_comprado)
+            msg: result.data.sort((a,b) => {
+                if(a.is_active === b.is_active) return a.id_item_comprado - b.id_item_comprado
+                return a.is_active ? -1 : 1
+            })
         })
     }).catch((e) => {
         res.status(e.status_code).json({
