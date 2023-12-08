@@ -5,7 +5,8 @@ export async function obterSubcategorias(req, res){
         res.status(result.status_code).json({
             status_code: result.status_code,
             msg: result.data.sort((a,b) => {
-                if(a.id_categoria !== b.id_categoria) return a.id_categoria - b.id_categoria
+                if (a.is_active !== b.is_active) return a.is_active ? -1 : 1
+                if (a.id_categoria !== b.id_categoria) return a.id_categoria - b.id_categoria
                 return a.id_subcategoria - b.id_subcategoria
             })
         })

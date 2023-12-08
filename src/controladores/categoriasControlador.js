@@ -3,7 +3,10 @@ export async function obterCategorias(req, res){
     await API(req.method, 'listar_categorias/').then((result) => {
         res.status(result.status_code).json({
             status_code: result.status_code,
-            msg: result.data.sort((a,b) => a.id_categoria - b.id_categoria)
+            msg: result.data.sort((a,b) => {
+                if(a.is_active === b.is_active) return a.id_categoria - b.id_categoria
+                return a.is_active ? -1 : 1
+            })
         })
     }).catch((e) => {
         res.status(e.status_code).json({
