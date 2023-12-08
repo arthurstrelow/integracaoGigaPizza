@@ -1,9 +1,14 @@
 import express from 'express'
-import {obterRotas} from "../controladores/paginaPrincipalControlador.js";
+import {listarRotas} from '../funcoes.js'
 const rotas = express.Router()
 
 rotas
     .route('/')
-    .get(obterRotas)
+    .get(async (req, res) => {
+        res.status(200).json({
+            status_code: 200,
+            rotas: await listarRotas()
+        })
+    })
 
 export default rotas
