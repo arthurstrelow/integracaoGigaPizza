@@ -110,7 +110,10 @@ export async function cadastrarSubcategoria(req, res){
 export async function editarSubcategoria(req, res){
     const { id_subcategoria, id_categoria, nome_subcategoria } = req.body;
 
-    await API(req.method, 'cadastrar_subcategoria/', {
+    const dados = await API('get', `listar_subcategoria/${id_subcategoria}`).then(r => r.data).catch(e => e.status_code)
+    if(dados === 500) return res.status(404).json({status_code: 404, msg: `A subcategoria não foi encontrada`})
+
+    await API(req.method, 'editar_subcategoria/', {
         "id_subcategoria": id_subcategoria,
         "id_categoria": id_categoria,
         "nome_subcategoria": nome_subcategoria

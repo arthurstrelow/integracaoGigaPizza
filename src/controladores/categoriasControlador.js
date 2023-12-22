@@ -106,6 +106,9 @@ export async function cadastrarCategoria(req, res){
 export async function editarCategoria(req, res){
     const { id_categoria, nome_categoria } = req.body;
 
+    const dados = await API('get', `listar_categoria/${id_categoria}`).then(r => r.data).catch(e => e.status_code)
+    if(dados === 500) return res.status(404).json({status_code: 404, msg: `A categoria não foi encontrada`})
+
     await API(req.method, 'editar_categoria/', {
         "id_categoria": id_categoria,
         "nome_categoria": nome_categoria.trim()
