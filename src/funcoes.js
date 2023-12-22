@@ -8,7 +8,7 @@ export async function API(metodo, endpoint, data = undefined){
         try{
             const api = await axios({
                 method: metodo,
-                url: 'https://gigapizza.onrender.com/api/maingigapizza/' + endpoint,
+                url: 'https://backendgigapizza1.rj.r.appspot.com/api/maingigapizza/' + endpoint,
                 headers: {"Content-Type": "application/json"},
                 data: data
             })
