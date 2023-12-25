@@ -78,16 +78,19 @@ export async function inativarCompra(req, res){
 }
 
 export async function criarItemComprado(req, res) {
-    const { nome_item_comprado, preco_item_comprado, quantidade_item_comprado, unidade_item_comprado } = req.body;
+    const { nome_item_comprado, preco_item_comprado, quantidade_item_comprado, unidade_item_comprado,id_usuario_requisitante } = req.body;
 
     await API(req.method, 'criar_item_comprado/', {
         "nome_item_comprado": nome_item_comprado.trim(),
         "preco_item_comprado": preco_item_comprado,
         "quantidade_item_comprado": quantidade_item_comprado,
-        "unidade_item_comprado": unidade_item_comprado.trim()
+        "unidade_item_comprado": unidade_item_comprado.trim(),
+        "id_usuario_requisitante": id_usuario_requisitante
     }).then((result) => {
         const resultado = result.data.resultado;
         const verificacaoDeNaoExistencia = resultado !== 0; // True: Não Existe; False: Existe
+
+        if(result.data.resultado === -5) return res.status(400).json({status_code: 400,msg: 'ID do Usuário não informado' })
 
         const retorno = {
             status_code: verificacaoDeNaoExistencia ? 200 : 400,
@@ -113,7 +116,8 @@ export async function editarItemComprado(req, res) {
         nome_item_comprado,
         preco_item_comprado,
         quantidade_item_comprado,
-        unidade_item_comprado
+        unidade_item_comprado,
+        id_usuario_requisitante
     } = req.body;
     if(await API('get', `listar_item_comprado/${id_item_comprado}`).then(r => r.status_code).catch(e => e.status_code) === 500) return res.status(404).json({status_code: 404, msg: `O Item não foi encontrado`})
 
@@ -122,10 +126,13 @@ export async function editarItemComprado(req, res) {
         "nome_item_comprado": nome_item_comprado.trim(),
         "preco_item_comprado": preco_item_comprado,
         "quantidade_item_comprado": quantidade_item_comprado,
-        "unidade_item_comprado": unidade_item_comprado.trim()
+        "unidade_item_comprado": unidade_item_comprado.trim(),
+        "id_usuario_requisitante": id_usuario_requisitante
     }).then((result) => {
         const verificaoDeNaoExistencia = result.data.resultado !== 0 // True: Não Existe; False: Existe
 
+        if(result.data.resultado === -5) return res.status(400).json({status_code: 400,msg: 'ID do Usuário não informado' })
+        
         const retorno = {
             status_code: verificaoDeNaoExistencia ? 200 : 400,
             msg: verificaoDeNaoExistencia ? `Item editado com sucesso` : 'Já existe um item com esse nome'
