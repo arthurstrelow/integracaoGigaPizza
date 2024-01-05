@@ -20,7 +20,7 @@ export async function obterSubcategorias(req, res){
 
 export async function obterSubcategoria(req, res){
     const id_subcategoria = req.params.id
-    if(isNaN(parseInt(id_subcategoria))) return res.status(404).json({status_code: 404, msg: 'Tipo de dado não permitido'})
+    if(isNaN(parseInt(id_subcategoria))) return res.status(404).json({status_code: 404, msg: 'Por favor, insira apenas número no endpoint'})
     await API(req.method, `listar_subcategoria/${id_subcategoria}`).then((result) => {
         res.status(result.status_code).json({
             status_code: result.status_code,
@@ -79,14 +79,17 @@ export async function inativarSubcategoria(req, res){
 }
 
 export async function cadastrarSubcategoria(req, res){
-    const { id_categoria, nome_subcategoria } = req.body;
+    const { id_categoria, nome_subcategoria, id_usuario_requisitante } = req.body;
 
     await API(req.method, 'cadastrar_subcategoria/', {
         "id_categoria": id_categoria,
-        "nome_subcategoria": nome_subcategoria.trim()
+        "nome_subcategoria": nome_subcategoria.trim(),
+        "id_usuario_requisitante": id_usuario_requisitante
     }).then((result) => {
             const resultado = result.data.resultado;
             const verificaoDeNaoExistencia = resultado !== 0 // True: Não Existe; False: Existe
+
+            if(resultado === -5) return res.status(400).json({status_code: 400,msg: 'ID do Usuário não informado' })
 
             const retorno = {
                 status_code: verificaoDeNaoExistencia ? 200 : 400,
@@ -108,7 +111,7 @@ export async function cadastrarSubcategoria(req, res){
 }
 
 export async function editarSubcategoria(req, res){
-    const { id_subcategoria, id_categoria, nome_subcategoria } = req.body;
+    const { id_subcategoria, id_categoria, nome_subcategoria, id_usuario_requisitante } = req.body;
 
     const dados = await API('get', `listar_subcategoria/${id_subcategoria}`).then(r => r.data).catch(e => e.status_code)
     if(dados === 500) return res.status(404).json({status_code: 404, msg: `A subcategoria não foi encontrada`})
@@ -116,10 +119,13 @@ export async function editarSubcategoria(req, res){
     await API(req.method, 'editar_subcategoria/', {
         "id_subcategoria": id_subcategoria,
         "id_categoria": id_categoria,
-        "nome_subcategoria": nome_subcategoria
+        "nome_subcategoria": nome_subcategoria,
+        "id_usuario_requisitante": id_usuario_requisitante
     }).then((result) => {
             const resultado = result.data.resultado;
             const verificaoDeNaoExistencia = resultado !== 0 // True: Não Existe; False: Existe
+
+            if(resultado === -5) return res.status(400).json({status_code: 400,msg: 'ID do Usuário não informado' })
 
             const retorno = {
                 status_code: verificaoDeNaoExistencia ? 200 : 400,

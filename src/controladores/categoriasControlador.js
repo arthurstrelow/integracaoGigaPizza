@@ -1,4 +1,6 @@
 import {API} from '../funcoes.js'
+
+
 export async function obterCategorias(req, res){
     await API(req.method, 'listar_categorias/').then((result) => {
         res.status(result.status_code).json({
@@ -16,9 +18,10 @@ export async function obterCategorias(req, res){
     })
 }
 
+
 export async function obterCategoria(req, res){
     const id_categoria = req.params.id
-    if(isNaN(parseInt(id_categoria))) return res.status(404).json({status_code: 404, msg: 'Por favor, insira apenas números no campo "id_categoria"'})
+    if(isNaN(parseInt(id_categoria))) return res.status(404).json({status_code: 404, msg: 'Por favor, insira apenas número no endpoint'})
     await API(req.method, `listar_categoria/${id_categoria}`).then((result) => {
         res.status(result.status_code).json({
             status_code: result.status_code,
@@ -31,6 +34,7 @@ export async function obterCategoria(req, res){
         })
     })
 }
+
 
 export async function ativarCategoria(req, res){
     const {id_categoria} = req.body
@@ -54,6 +58,7 @@ export async function ativarCategoria(req, res){
     })
 }
 
+
 export async function inativarCategoria(req, res){
     const {id_categoria} = req.body
     const dados = await API('get', `listar_categoria/${id_categoria}`).then(r => r.data).catch(e => e.status_code)
@@ -76,15 +81,19 @@ export async function inativarCategoria(req, res){
     })
 }
 
+
 export async function cadastrarCategoria(req, res){
-    const { nome_categoria } = req.body;
+    const { nome_categoria, id_usuario_requisitante } = req.body;
 
     await API(req.method, 'cadastrar_categoria/', {
-        "nome_categoria": nome_categoria.trim()
+        "nome_categoria": nome_categoria.trim(),
+        "id_usuario_requisitante": id_usuario_requisitante
     }).then((result) => {
             const resultado = result.data.resultado;
+            
+            if(resultado === -5) return res.status(400).json({status_code: 400,msg: 'ID do Usuário não informado' })
+            
             const verificaoDeNaoExistencia = resultado !== 0 // True: Não Existe; False: Existe
-
             const retorno = {
                 status_code: verificaoDeNaoExistencia ? 200 : 400,
                 msg: verificaoDeNaoExistencia ? `Categoria cadastrada com sucesso.` : 'Existe uma categoria com esse nome.'
@@ -103,19 +112,22 @@ export async function cadastrarCategoria(req, res){
         });
 }
 
-export async function editarCategoria(req, res){
-    const { id_categoria, nome_categoria } = req.body;
 
+export async function editarCategoria(req, res){
+    const { id_categoria, nome_categoria, id_usuario_requisitante } = req.body;
     const dados = await API('get', `listar_categoria/${id_categoria}`).then(r => r.data).catch(e => e.status_code)
     if(dados === 500) return res.status(404).json({status_code: 404, msg: `A categoria não foi encontrada`})
 
     await API(req.method, 'editar_categoria/', {
         "id_categoria": id_categoria,
-        "nome_categoria": nome_categoria.trim()
+        "nome_categoria": nome_categoria.trim(),
+        "id_usuario_requisitante": id_usuario_requisitante
         }).then((result) => {
-            const resultado = result.data.resultado;
-            const verificaoDeNaoExistencia = resultado !== 0 // True: Não Existe; False: Existe
+            const resultado = result.data.resultado
 
+            if(resultado === -5) return res.status(400).json({status_code: 400,msg: 'ID do Usuário não informado' })
+
+            const verificaoDeNaoExistencia = resultado !== 0 // True: Não Existe; False: Existe
             const retorno = {
                 status_code: verificaoDeNaoExistencia ? 200 : 400,
                 msg: verificaoDeNaoExistencia ? `Categoria editada com sucesso` : 'Nome da categoria já existe'

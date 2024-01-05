@@ -19,7 +19,7 @@ export async function obterItensVendas(req, res){
 
 export async function obterItemVenda(req, res){
     const id_item_comprado = req.params.id
-    if(isNaN(parseInt(id_item_comprado))) return res.status(404).json({status_code: 404, msg: 'Tipo de dado não permitido'})
+    if(isNaN(parseInt(id_item_comprado))) return res.status(404).json({status_code: 404, msg: 'Por favor, insira apenas número no endpoint'})
     await API(req.method, `listar_item_venda/${id_item_comprado}`).then((result) => {
         res.status(result.status_code).json({
             status_code: result.status_code,
@@ -81,16 +81,19 @@ export async function inativarItemVenda(req, res) {
 }
 
 export async function criarItemVenda(req, res) {
-    const { nome_item_venda, descricao_item_venda, preco_item_venda, id_subcategoria } = req.body;
+    const { nome_item_venda, descricao_item_venda, preco_item_venda, id_subcategoria,id_usuario_requisitante } = req.body;
 
     await API(req.method, 'criar_item_venda/', {
         "nome_item_venda": nome_item_venda.trim(),
         "descricao_item_venda": descricao_item_venda.trim(),
         "preco_item_venda": preco_item_venda,
-        "id_subcategoria": id_subcategoria
+        "id_subcategoria": id_subcategoria,
+        "id_usuario_requisitante": id_usuario_requisitante
     }).then((result) => {
         const resultado = result.data.resultado;
         const verificacaoDeNaoExistencia = resultado !== 0; // True: Não Existe; False: Existe
+
+        if(result.data.resultado === -5) return res.status(400).json({status_code: 400,msg: 'ID do Usuário não informado' })
 
         const retorno = {
             status_code: verificacaoDeNaoExistencia ? 200 : 400,
@@ -111,16 +114,19 @@ export async function criarItemVenda(req, res) {
 }
 
 export async function editarItemVenda(req, res) {
-    const { id_item_venda, nome_item_venda, descricao_item_venda, preco_item_venda } = req.body;
+    const { id_item_venda, nome_item_venda, descricao_item_venda, preco_item_venda, id_usuario_requisitante } = req.body;
 
     await API(req.method, 'editar_item_venda/', {
         "id_item_venda": id_item_venda,
         "nome_item_venda": nome_item_venda,
         "descricao_item_venda": descricao_item_venda,
-        "preco_item_venda": preco_item_venda
+        "preco_item_venda": preco_item_venda,
+        "id_usuario_requisitante": id_usuario_requisitante
     }).then((result) => {
         const resultado = result.data.resultado;
         const verificacaoDeNaoExistencia = resultado !== 0;
+
+        if(result.data.resultado === -5) return res.status(400).json({status_code: 400,msg: 'ID do Usuário não informado' })
 
         const retorno = {
             status_code: verificacaoDeNaoExistencia ? 200 : 400,
