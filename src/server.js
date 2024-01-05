@@ -6,16 +6,26 @@ import categoriaRotas from "./rotas/categoriasRotas.js"
 import subcategoriasRotas from "./rotas/subcategoriasRotas.js"
 import error from "./rotas/error.js"
 import paginaPrincipalRotas from "./rotas/paginaPrincipal.js"
+import clienteRotas from './rotas/clienteRotas.js'
+import pizzaRotas from './rotas/pizzaRotas.js'
+import itemPedidoRotas from './rotas/itemPedidoRotas.js'
 
 const server = express()
 const porta = 3000
 
 server.use(cors())
 server.use(express.json())
+
+
 server.use(categoriaRotas)
 server.use(subcategoriasRotas)
 server.use(itemCompradoRotas)
 server.use(itemVendaRotas)
+server.use(clienteRotas)
+server.use(pizzaRotas)
+server.use(itemPedidoRotas)
+
+
 server.use(paginaPrincipalRotas)
 server.use(error)
 
