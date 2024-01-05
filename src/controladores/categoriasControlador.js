@@ -21,7 +21,7 @@ export async function obterCategorias(req, res){
 
 export async function obterCategoria(req, res){
     const id_categoria = req.params.id
-    if(isNaN(parseInt(id_categoria))) return res.status(404).json({status_code: 404, msg: 'Por favor, insira apenas números no campo "id_categoria"'})
+    if(isNaN(parseInt(id_categoria))) return res.status(404).json({status_code: 404, msg: 'Por favor, insira apenas número no endpoint'})
     await API(req.method, `listar_categoria/${id_categoria}`).then((result) => {
         res.status(result.status_code).json({
             status_code: result.status_code,

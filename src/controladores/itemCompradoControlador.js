@@ -19,7 +19,7 @@ export async function obterItensComprados(req, res){
 
 export async function obterItemComprado(req, res){
     const id_item_comprado = req.params.id
-    if(isNaN(parseInt(id_item_comprado))) return res.status(404).json({status_code: 404, msg: 'Tipo de dado não permitido'})
+    if(isNaN(parseInt(id_item_comprado))) return res.status(404).json({status_code: 404, msg: 'Por favor, insira apenas número no endpoint'})
     await API(req.method, `listar_item_comprado/${id_item_comprado}`).then((result) => {
         res.status(result.status_code).json({
             status_code: result.status_code,
