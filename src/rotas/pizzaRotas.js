@@ -10,4 +10,12 @@ rotas
     .route('/listar/pizzapedido/:id')
     .get(pizzaControlador.listarPizzaPedido)
 
+rotas
+    .route('/cadastrar/saborpizza')
+    .get(pizzaControlador.criarSaborPizza)
+
+rotas
+    .route('/cadastrar/pizza')
+    .get(pizzaControlador.criarPizza)
+
 export default rotas
